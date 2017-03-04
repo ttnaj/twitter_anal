@@ -4,7 +4,7 @@ import warnings
 import requests
 
 try:
-    from settings.settings import TWITTER_USERNAME, TWITTER_API_KEY
+    from settings.settings import TWITTER_USERNAME, TWITTER_API_KEY, CONNECTION_URL
 except ImportError:
     warnings.warn('Twitter Api username and key are missing !')
 
@@ -41,7 +41,7 @@ class ApiServices:
 
     def __init__(self):
         self.oAuth_key = None
-        self.connection_url = 'connection url here'
+        self.connection_url = CONNECTION_URL
         self.base_url = 'base url here'
         self.remove_base_url = ''
         self.post_base_url = ''
@@ -55,7 +55,7 @@ class ApiServices:
 
     def handle_connection(self):
         try:
-            params = {'username': TWITTER_USERNAME, 'key': TWITTER_USERNAME}
+            params = {'username': TWITTER_USERNAME, 'key': TWITTER_API_KEY}
             connection_headers = {'Content-Type':'application/json; charset=utf-8'}
             r = requests.post(self.connection_url, data=json.dumps(params), headers=connection_headers)
             result = json.loads(r.text)
