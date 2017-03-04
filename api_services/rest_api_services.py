@@ -4,13 +4,9 @@ import warnings
 import oauth2
 
 import requests
-
-try:
-
-    from settings.settings import TWITTER_KEY, TWITTER_SECRET, CONNECTION_URL
-
-except ImportError:
-    warnings.warn('Twitter Api username and key are missing !')
+TWITTER_KEY = ""
+TWITTER_SECRET = ""
+CONNECTION_URL = "https://api.twitter.com/oauth2/token"
 
 __author__ = 'taha'
 
@@ -59,17 +55,17 @@ class ApiServices:
 
     def handle_connection(self):
         try:
-            consumer = oauth2.Consumer(key=TWITTER_KEY, secret=TWITTER_SECRET)
-            token = oauth2.Token(key=TWITTER_KEY, secret=TWITTER_SECRET)
-            client = oauth2.Client(consumer, token)
+            #consumer = oauth2.Consumer(key=TWITTER_KEY, secret=TWITTER_SECRET)
+            #token = oauth2.Token(key=TWITTER_KEY, secret=TWITTER_SECRET)
+            #client = oauth2.Client(consumer, token)
 
             # params = {'username': TWITTER_USERNAME, 'key': TWITTER_API_KEY}
             # connection_headers = {'Content-Type':'application/json; charset=utf-8'}
             # r = requests.post(self.connection_url, data=json.dumps(params), headers=connection_headers)
             # result = json.loads(r.text)
 
-            resp, content = client.request(CONNECTION_URL, method="GET", body=bytes("", "utf-8"),
-                                           headers=None)
+            #resp, content = client.request(CONNECTION_URL, method="GET", body=bytes("", "utf-8"),
+                                           #headers=None)
 
             # if result["responseCode"] != RESPONSE_OK:
             #     raise AuthenticationFailed
@@ -78,13 +74,16 @@ class ApiServices:
 
             params = {'grant_type': 'client_credentials'}
             to_encode = str(TWITTER_KEY)+':'+str(TWITTER_SECRET)
+
             basic_auth_token = base64.b64encode(to_encode)
-            connection_headers = {'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8', 'Authorization':'Basic %s' % str(basic_auth_token)}
-            r = requests.post(self.connection_url, data=json.dumps(params), headers=connection_headers)
+
+
+            connection_headers = {'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8', 'Authorization':'Basic ' +basic_auth_token}
+            r = requests.post(self.connection_url, data=params, headers=connection_headers)
             result = json.loads(r.text)
             print result
-            if result["responseCode"] != RESPONSE_OK:
-                raise AuthenticationFailed
+            return result['access_token']
+
 
         except:
             raise AuthenticationFailed
@@ -116,3 +115,5 @@ class ApiServices:
         result = json.loads(r.text)
         if result["responseCode"] != RESPONSE_OK:
             raise DeleteQueryFailed
+
+s = ApiServices()
