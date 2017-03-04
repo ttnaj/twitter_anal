@@ -1,3 +1,4 @@
+import base64
 import json
 import warnings
 import oauth2
@@ -5,7 +6,11 @@ import oauth2
 import requests
 
 try:
+<<<<<<< Updated upstream
     from settings.settings import TWITTER_KEY, TWITTER_SECRET, CONNECTION_URL
+=======
+    from settings.settings import CONSUMER_KEY, CONSUMER_SECRET_KEY, CONNECTION_URL
+>>>>>>> Stashed changes
 except ImportError:
     warnings.warn('Twitter Api username and key are missing !')
 
@@ -72,6 +77,17 @@ class ApiServices:
             #     raise AuthenticationFailed
             # else:
             #     return result['data']['accessToken']
+
+            params = {'grant_type': 'client_credentials'}
+            to_encode = str(TWITTER_KEY)+':'+str(TWITTER_SECRET)
+            basic_auth_token = base64.b64encode(to_encode)
+            connection_headers = {'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8', 'Authorization':'Basic %s' % str(basic_auth_token)}
+            r = requests.post(self.connection_url, data=json.dumps(params), headers=connection_headers)
+            result = json.loads(r.text)
+            print result
+            if result["responseCode"] != RESPONSE_OK:
+                raise AuthenticationFailed
+
         except:
             raise AuthenticationFailed
 
