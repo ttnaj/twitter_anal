@@ -6,11 +6,9 @@ import oauth2
 import requests
 
 try:
-<<<<<<< Updated upstream
+
     from settings.settings import TWITTER_KEY, TWITTER_SECRET, CONNECTION_URL
-=======
-    from settings.settings import CONSUMER_KEY, CONSUMER_SECRET_KEY, CONNECTION_URL
->>>>>>> Stashed changes
+
 except ImportError:
     warnings.warn('Twitter Api username and key are missing !')
 
